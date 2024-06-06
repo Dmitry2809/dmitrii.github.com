@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма ввода данных</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px 0;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .card-container {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 10px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+        .card button:hover {
+            background-color: #cc0000;
+        }
+        .card p {
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        function changeBackgroundColor() {
+            var colorSelect = document.getElementById('background-color');
+            var selectedColor = colorSelect.value;
+            document.body.style.backgroundColor = selectedColor;
+        }
+
+        function validateInput(event) {
+            var input = event.target;
+            input.value = input.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '');
+        }
+
+        function addCard(event) {
+            event.preventDefault();
+
+            var lastName = document.getElementById('last-name').value;
+            var firstName = document.getElementById('first-name').value;
+            var age = document.getElementById('age').value;
+            var gender = document.getElementById('gender').value;
+
+            var genderText;
+            switch(gender) {
+                case 'm':
+                    genderText = 'Мужской';
+                    break;
+                case 'f':
+                    genderText = 'Женский';
+                    break;
+                case 'other':
+                    genderText = 'Не указан';
+                    break;
+            }
+
+            var cardContainer = document.getElementById('card-container');
+            var card = document.createElement('div');
+            card.className = 'card';
+
+            card.innerHTML = `
+                <button onclick="removeCard(this)">✖</button>
+                <p><strong>Фамилия:</strong> ${lastName}</p>
+                <p><strong>Имя:</strong> ${firstName}</p>
+                <p><strong>Возраст:</strong> ${age}</p>
+                <p><strong>Пол:</strong> ${genderText}</p>
+            `;
+
+            cardContainer.appendChild(card);
+            document.getElementById('data-form').reset();
+        }
+
+        function removeCard(button) {
+            var card = button.parentElement;
+            card.remove();
+        }
+    </script>
+</head>
+<body>
+    <p align="center">
+        <img src="https://bobsoccer.ru/data/photo/27908.106811.cska.jpg">
+    </p>
+    <div class="form-container">
+        <h2>Заполните форму</h2>
+        <form id="data-form" onsubmit="addCard(event)">
+            <div class="form-group">
+                <label for="last-name">Фамилия:</label>
+                <input type="text" id="last-name" name="last-name" required oninput="validateInput(event)">
+            </div>
+            <div class="form-group">
+                <label for="first-name">Имя:</label>
+                <input type="text" id="first-name" name="first-name" required oninput="validateInput(event)">
+            </div>
+            <div class="form-group">
+                <label for="age">Возраст:</label>
+                <input type="number" id="age" name="age" required min="0">
+            </div>
+            <div class="form-group">
+                <label for="gender">Пол:</label>
+                <select id="gender" name="gender" required>
+                    <option value="m">М</option>
+                    <option value="f">Ж</option>
+                    <option value="other">-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="background-color">Цвет фона:</label>
+                <select id="background-color" name="background-color" onchange="changeBackgroundColor()">
+                    <option value="#f0f0f0">Серый</option>
+                    <option value="#ffcccc">Красный</option>
+                    <option value="#ccffcc">Зеленый</option>
+                    <option value="#ccccff">Синий</option>
+                    <option value="#ffffcc">Желтый</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Отправить">
+            </div>
+        </form>
+    </div>
+    <div id="card-container" class="card-container"></div>
+</body>
+</html>
